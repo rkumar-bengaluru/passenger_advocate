@@ -1,6 +1,6 @@
 %md
 # Agent Architecture
-![Passenger Advocate Agent Evaluation](https://raw.githubusercontent.com/rkumar-bengaluru/passenger_advocate/refs/heads/main/assets/core_architecture.png)
+![Passenger Advocate Agent Evaluation](https://raw.githubusercontent.com/rkumar-bengaluru/passenger_advocate/refs/heads/main/assets/core_architecture1.png)
 **_Below is the high level description of the agent architecture. Please note actual implementation will be minimal cut down version of above architecture to save time._**
 
 ## API Gateway
