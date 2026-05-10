@@ -1,5 +1,6 @@
 %md
-
+# Agent Architecture
+![Passenger Advocate Agent Evaluation](https://raw.githubusercontent.com/rkumar-bengaluru/passenger_advocate/refs/heads/main/assets/core_architecture.png)
 **_Below is the high level description of the agent architecture. Please note actual implementation will be minimal cut down version of above architecture to save time._**
 
 ## API Gateway
@@ -78,5 +79,9 @@
 **Implementation**: I have not used **Langsmith**, however i have used **Langfuse** in the agentic development, one of the drawback was either it supports masking or unmasking, which means there is no way to get the original text. We can work around the hack with **RBAC control** mechanism of masking and unmasking using **Presidio**, but this is something to keep in mind.
 
 **Why it matters**: Essential for accountability, regulatory compliance, and continuous system improvement.
+
+
+Since the implementation will be a cut down version below is the simplied flow for this agent.
+![Passenger Advocate Agent Simplied Flow](https://raw.githubusercontent.com/rkumar-bengaluru/passenger_advocate/refs/heads/main/assets/simplified_flow.png)
 
 Not all components are discussed in detail however i think the above are the major components to talk about. Below we will review the evaluation strategy which can be employed to test this agent.
