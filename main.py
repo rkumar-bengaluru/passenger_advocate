@@ -5,8 +5,18 @@ import traceback
 from dotenv import load_dotenv
 from langfuse import get_client
 from langfuse.langchain import CallbackHandler
+from src.retrieval import OpenAIEmbeddingModel
 
 load_dotenv()
+
+# create vector embedding.
+embedding = OpenAIEmbeddingModel()
+# embedding.create_embedding()
+results = embedding.search(query="Since it was cancelled, is United required to provide me with a hotel?")
+
+for result in results:
+    print(result['text'][:300] + "...\n")
+
 
 langfuse_handler = CallbackHandler()
 
