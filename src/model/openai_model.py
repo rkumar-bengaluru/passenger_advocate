@@ -4,6 +4,7 @@ from typing import Optional, Tuple, Union, Any
 from pydantic import SecretStr, BaseModel
 import os
 from openai import OpenAI
+from langfuse import observe
 
 default_openai_model = "gpt-4o"
 
@@ -29,6 +30,7 @@ class OpenAIModel(BaseLLMModel):
             self.client = OpenAI(api_key=self.api_key.get_secret_value())
         return self.client
 
+    @observe(name="openai llm call", as_type="generation")
     def generate(
         self, prompt: str, schema: Optional[BaseModel] = None
     ) -> Tuple[Union[str, BaseModel], float]:

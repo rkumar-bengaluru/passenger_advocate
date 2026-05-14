@@ -1,9 +1,17 @@
-from pyspark.sql import SparkSession
+# from pyspark.sql import SparkSession
 from datetime import datetime
 import json
 from typing import Dict, Any
 
-spark = SparkSession.builder.getOrCreate()
+from pydantic import BaseModel, Field
+
+# spark = SparkSession.builder.getOrCreate()
+
+
+class GetFlightStatusInput(BaseModel):
+    airline: str = Field(..., description="Airline Name for which the information needs to be retrieved")
+    flight_number: str = Field(..., description="Flight for which the status required")
+    flight_date: str = Field(..., description="Date of the flight")
 
 def get_flight_status(
     airline: str,
@@ -54,22 +62,23 @@ def get_flight_status(
     """
 
     try:
-        df = spark.sql(query)
-        results = [row.asDict() for row in df.collect()]
+        # df = spark.sql(query)
+        # results = [row.asDict() for row in df.collect()]
         
-        # Create human-readable summary
-        summary = None
-        if results:
-            flight = results[0]
-            if flight.get('Cancelled') == 1:
-                summary = f"Cancelled - {flight.get('CancellationCode', '')}"
-            elif flight.get('Diverted') == 1:
-                summary = "Diverted"
-            elif flight.get('ArrDelayMinutes', 0) >= 15:
-                summary = f"Delayed by {flight.get('ArrDelayMinutes')} minutes"
-            else:
-                summary = "On Time"
-        
+        # # Create human-readable summary
+        # summary = None
+        # if results:
+        #     flight = results[0]
+        #     if flight.get('Cancelled') == 1:
+        #         summary = f"Cancelled - {flight.get('CancellationCode', '')}"
+        #     elif flight.get('Diverted') == 1:
+        #         summary = "Diverted"
+        #     elif flight.get('ArrDelayMinutes', 0) >= 15:
+        #         summary = f"Delayed by {flight.get('ArrDelayMinutes')} minutes"
+        #     else:
+        #         summary = "On Time"
+        results = []
+        summary = ""
         response = {
             "tool": "get_flight_status",
             "input": {

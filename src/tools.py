@@ -1,10 +1,11 @@
 
 
-from langchain_core.tools import Tool
+from langchain_core.tools import Tool, StructuredTool
+from pydantic import BaseModel, Field
 
 from typing import List, Dict, Any
 from src.retrieval import OpenAIEmbeddingModel
-from src.flight_status import get_flight_status
+from src.flight_status import get_flight_status, GetFlightStatusInput
 import logging
 
 # Initialize the embedding model once (outside the function)
@@ -54,7 +55,8 @@ def query_policy_documents(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         }]
     
 
-policy_search_tool = Tool.from_function(
+
+policy_search_tool = StructuredTool.from_function(
     func=query_policy_documents,
     name="query_policy_documents",
     description="""Useful for answering questions about company policies, rules, guidelines, 
@@ -76,15 +78,15 @@ policy_search_tool = Tool.from_function(
 
     This tool performs semantic search over internal policy documents and returns 
     the most relevant excerpts with relevance scores.""",
-    return_direct=False
 )
 
-flight_status_tool = Tool.from_function(
+
+flight_status_tool = StructuredTool.from_function(
     func=get_flight_status,
     name="get_flight_status",
     description="""Useful for retrieving the status of a specific commercial flight 
     (departure/arrival time, delay, cancellation, diversion, etc.) on a given date. 
     Use this tool when the user asks about a particular flight like UA123 on 2023-01-01.""",
-    return_direct=False
+    args_schema=GetFlightStatusInput
 )
 

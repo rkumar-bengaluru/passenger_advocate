@@ -1,0 +1,7 @@
+[project]
+name = "passenger_advocate"
+version = "0.1.0"
+packages = [{where = ["src"]}]
+
+[tool.setuptools.packages.find]
+where = ["src"]

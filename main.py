@@ -9,13 +9,21 @@ from src.retrieval import OpenAIEmbeddingModel
 
 load_dotenv()
 
-# create vector embedding.
-embedding = OpenAIEmbeddingModel()
-# embedding.create_embedding()
-results = embedding.search(query="Since it was cancelled, is United required to provide me with a hotel?")
+# from src.template import IntentClassification, tools_to_prompt_string
+# from src.tools import policy_search_tool, flight_status_tool
 
-for result in results:
-    print(result['text'][:300] + "...\n")
+# tools = [flight_status_tool, policy_search_tool]
+
+# toolsStr = tools_to_prompt_string(tools)
+# print(toolsStr)
+
+# # create vector embedding.
+# embedding = OpenAIEmbeddingModel()
+# # embedding.create_embedding()
+# results = embedding.search(query="Since it was cancelled, is United required to provide me with a hotel?")
+
+# for result in results:
+#     print(result['text'][:300] + "...\n")
 
 
 langfuse_handler = CallbackHandler()

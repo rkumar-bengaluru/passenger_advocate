@@ -4,6 +4,7 @@ from google.genai import Client
 from pydantic import SecretStr
 from pydantic import BaseModel
 import os 
+from langfuse import observe
 
 default_gemini_model = "gemini-2.5-pro"
 
@@ -54,6 +55,7 @@ class GeminiModel(BaseLLMModel):
 
         return self.client
     
+    @observe(name="gemini llm call", as_type="generation")
     def generate(
         self, prompt: str, schema: Optional[BaseModel] = None
     ) -> Tuple[Union[str, BaseModel], float]:
