@@ -67,7 +67,7 @@ def build_summary_prompt_for_flight_status(user_query: str, response: dict) -> s
     {json.dumps(response, indent=2, ensure_ascii=False)}
 
     ## Task
-    Summarize the above tool output into a clear, user-facing answer.
+    Summarize the above tool output check the summary and dervice a clear, user-facing answer.
     - Mention the flight status, delays, cancellations, or policies as appropriate.
     - Use plain language, not JSON.
     - Keep it concise but informative.

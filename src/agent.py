@@ -69,12 +69,15 @@ def summarize_answer(state: AgentState):
 
         if selected_action == "get_flight_status":
             if ready:
-                if state["status"] is None:
+                if not state.get("flight_status_history"):
                     raise TypeError(
-                    f"Unexpected state: policy_snippet should be there"
+                    f"Unexpected state: flight_status_history should be there"
                     )
                 status = state["flight_status_history"][-1]
                 prompt = build_summary_prompt_for_flight_status(state["messages"][-1].content, status)
+
+                print(prompt)
+
                 response, score = MODEL.generate(prompt=prompt, schema=None)
                 # Add LLM answer to conversation history
                 state["messages"].append(AIMessage(content=response))
@@ -86,6 +89,8 @@ def summarize_answer(state: AgentState):
                     raise TypeError("Unexpected state: policy_snippets should be there")
                 context = format_policy_snippets(state["policy_snippets"][-1])
                 prompt = build_summary_prompt(state["messages"][-1].content, context)
+
+                print(prompt)
 
                 response, score = MODEL.generate(prompt=prompt, schema=None)
                 # Add LLM answer to conversation history
@@ -113,7 +118,7 @@ def flight_status_query(state: AgentState) -> AgentState:
     if "flight_status_history" not in state or state["flight_status_history"] is None:
         state["flight_status_history"] = []
 
-    response = get_flight_status("abc", 1, "sss")
+    response = get_flight_status("United", "UA123", "2023-01-01")
     
     # Append new response to history
     state["flight_status_history"].append(response)

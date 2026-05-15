@@ -15,7 +15,7 @@ class GetFlightStatusInput(BaseModel):
 
 def get_flight_status(
     airline: str,
-    flight_number: int,
+    flight_number: str,
     flight_date: str
 ) -> Dict[str, Any]:
     """
@@ -78,7 +78,7 @@ def get_flight_status(
         #     else:
         #         summary = "On Time"
         results = []
-        summary = "Delayed by 35 minutes"
+        summary = f"{airline} flight number {flight_number} got Delayed by 35 minutes on {flight_date_hive}"
         response = {
             "tool": "get_flight_status",
             "input": {
@@ -86,12 +86,8 @@ def get_flight_status(
                 "flight_number": flight_number,
                 "flight_date": flight_date
             },
-            "query_executed": query.strip(),
-            "status": "success",
-            "record_count": len(results),
-            "data": results,
-            "summary": summary,
-            "timestamp": datetime.utcnow().isoformat()
+           "status": "success",
+           "summary": summary
         }
         
         return response
