@@ -1,4 +1,4 @@
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from src.agent import agent_app
 from src.utils import run_agent_loop
 import traceback
@@ -46,8 +46,14 @@ for user_input in run_agent_loop(agent_app):
             for value in event.values():
                 if "messages" in value and value["messages"]:
                     last_msg = value["messages"][-1]
-                    if hasattr(last_msg, "content"):
+                    if isinstance(last_msg, AIMessage):
                         print(f"Agent: {last_msg.content}")
+                    elif isinstance(last_msg, HumanMessage):
+                        print(f"User: {last_msg.content}")
+
+
+                    # if hasattr(last_msg, "content"):
+                    #     print(f"Agent: {last_msg.content}")
 
         get_client().flush()
 

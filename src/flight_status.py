@@ -78,7 +78,7 @@ def get_flight_status(
         #     else:
         #         summary = "On Time"
         results = []
-        summary = ""
+        summary = "Delayed by 35 minutes"
         response = {
             "tool": "get_flight_status",
             "input": {

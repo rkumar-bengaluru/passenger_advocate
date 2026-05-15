@@ -2,6 +2,7 @@ import textwrap
 from textwrap import dedent
 from pydantic import BaseModel
 import typing
+import json 
 
 def tools_to_prompt_string(tools) -> str:
     blocks = []
@@ -37,6 +38,40 @@ def schema_to_string(schema: type[BaseModel]) -> str:
         lines.append(f"- `{name}` ({type_name}, {required}) : {desc}")
     
     return "\n".join(lines)
+
+def build_summary_prompt(user_query: str, retrieved_context: str) -> str:
+    return dedent(f"""
+    You are an intelligent assistant. Your task is to summarize information retrieved from the knowledge base
+    in response to the user's query.
+
+    ## User Query
+    {user_query}
+
+    ## Retrieved Context
+    {retrieved_context}
+
+    ## Instructions
+    - Provide a concise, clear summary that directly answers the user's query.
+    - Highlight the most relevant points from the retrieved context.
+    - Do not include irrelevant details.
+    - If the context does not contain enough information, state that clearly.
+
+    ## Final Answer
+    """)
+
+def build_summary_prompt_for_flight_status(user_query: str, response: dict) -> str:
+    return dedent(f"""
+    You are a Passenger Advocate Agent. The user asked: "{user_query}"
+
+    ## Tool Output Context
+    {json.dumps(response, indent=2, ensure_ascii=False)}
+
+    ## Task
+    Summarize the above tool output into a clear, user-facing answer.
+    - Mention the flight status, delays, cancellations, or policies as appropriate.
+    - Use plain language, not JSON.
+    - Keep it concise but informative.
+    """)
 
 class IntentClassification:
 

@@ -1,5 +1,10 @@
 import threading
 import time
+from typing import List, Any, Dict
+import logging
+import json 
+
+logger = logging.getLogger(__name__)
 
 def get_input_with_timeout(prompt, timeout):
     """Get user input with a timeout using threading."""
@@ -40,3 +45,22 @@ def run_agent_loop(agent_app, input_timeout=120):
         yield user_input
     
     print("\n👋 Session ended.")
+
+def format_policy_snippets(results: List[Dict[str, Any]]) -> str:
+    """
+    Convert search results into a readable context string for the LLM prompt.
+    """
+    if not results:
+        return "No relevant policy information found."
+
+    formatted = []
+    logger.info("results ---%s", json.dumps(results))
+    for i, result in enumerate(results, start=1):
+        text = result.get("text", "")
+        score = result.get("score")
+        if score is not None:
+            formatted.append(f"[{i}] (score={score:.4f}): {text}")
+        else:
+            formatted.append(f"[{i}]: {text}")
+        
+    return "\n".join(formatted)
