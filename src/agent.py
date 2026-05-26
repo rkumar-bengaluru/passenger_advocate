@@ -17,11 +17,9 @@ import os
 import json 
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
-os.environ["LANGFUSE_DEBUG"] = "True"
+# logging.basicConfig(level=logging.DEBUG)
+# os.environ["LANGFUSE_DEBUG"] = "True"
 
-# logger = PassengerAdvocateLogger(
-# )
 
 # Configuration
 LLM_ENDPOINT = "databricks-gpt-5-nano"
@@ -118,7 +116,7 @@ def flight_status_query(state: AgentState) -> AgentState:
     if "flight_status_history" not in state or state["flight_status_history"] is None:
         state["flight_status_history"] = []
 
-    response = get_flight_status("United", "UA123", "2023-01-01")
+    response = get_flight_status("OO", "4277", "2023-12-30")
     
     # Append new response to history
     state["flight_status_history"].append(response)
@@ -184,15 +182,6 @@ def intent_classification(state: AgentState) -> AgentState:
     logger.info("analysis in state: %s", json.dumps(analysis, ensure_ascii=False))
     return state
 
-def route_from_intent(state: AgentState) -> str:
-    if state["query_type"] == "get_flight_status":
-        return "get_flight_status"
-    elif state["query_type"] == "get_policy_details":
-        return "get_policy_details"
-    else:
-        return "summarize_answer"  # fallback
-
-
 def route_from_intent_from_analysis(state: AgentState) -> str:
     analysis = state.get("intent_analysis")
     logger.info("analyzing intent %s", json.dumps(analysis))
@@ -212,8 +201,6 @@ def route_from_intent_from_analysis(state: AgentState) -> str:
     else:
         logger.info("returning.... %s", "summarize_answer")
         return "summarize_answer"
-
-
 
 def build_agent():
     workflow = StateGraph(AgentState)

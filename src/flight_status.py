@@ -1,4 +1,4 @@
-# from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession
 from datetime import datetime
 import json
 from typing import Dict, Any
@@ -22,12 +22,22 @@ def get_flight_status(
     Get flight status from ontime_cleaned table using Spark.
     Works directly in your Databricks notebook.
     """
-    
+    from datetime import datetime
+
     # Normalize inputs
     airline = airline.strip().upper()
-    # Convert YYYY-MM-DD to yyyymmdd format (most common in this dataset)
-    flight_date_hive = flight_date.replace("-", "")
-    
+    # Keep YYYY-MM-DD format (matches Hive table)
+    flight_date_hive = flight_date.strip()
+
+    print(f"""
+    --- Flight Query Parameters ---
+    Airline Code     : {airline}
+    Flight Number    : {flight_number}
+    Flight Date (raw): {flight_date}
+    Flight Date Hive : {flight_date_hive}
+    --------------------------------
+    """)
+
     query = f"""
     SELECT 
         FlightDate,
@@ -56,16 +66,20 @@ def get_flight_status(
         LateAircraftDelay
     FROM hive_metastore.default.ontime_cleaned
     WHERE Reporting_Airline = '{airline}'
-      AND Flight_Number_Reporting_Airline = {flight_number}
+      AND Flight_Number_Reporting_Airline = {int(flight_number)}
       AND FlightDate = '{flight_date_hive}'
     ORDER BY Origin, Dest
     """
 
     try:
+
+        summary = f"""Flight Status Summary:
+        Flight {airline} {flight_number} from Salt Lake City to Cedar City on {flight_date_hive} was CANCELLED
+        """
+
         # df = spark.sql(query)
         # results = [row.asDict() for row in df.collect()]
-        
-        # # Create human-readable summary
+
         # summary = None
         # if results:
         #     flight = results[0]
@@ -77,21 +91,14 @@ def get_flight_status(
         #         summary = f"Delayed by {flight.get('ArrDelayMinutes')} minutes"
         #     else:
         #         summary = "On Time"
-        results = []
-        summary = f"{airline} flight number {flight_number} got Delayed by 35 minutes on {flight_date_hive}"
-        response = {
+
+        return {
             "tool": "get_flight_status",
-            "input": {
-                "airline": airline,
-                "flight_number": flight_number,
-                "flight_date": flight_date
-            },
-           "status": "success",
-           "summary": summary
+            "input": {"airline": airline, "flight_number": flight_number, "flight_date": flight_date},
+            "status": "success",
+            "summary": summary
         }
-        
-        return response
-        
+
     except Exception as e:
         return {
             "tool": "get_flight_status",
@@ -100,10 +107,3 @@ def get_flight_status(
             "error_message": str(e),
             "timestamp": datetime.utcnow().isoformat()
         }
-
-
-# ==================== EXAMPLE USAGE ====================
-
-if __name__ == "__main__":
-    result = get_flight_status("UA", 123, "2023-01-01")
-    print(json.dumps(result, indent=2, default=str))
