@@ -27,3 +27,5 @@ Your Agent should be able to answer the following types of questions correctly:
 2.  **User:** *"Since it was cancelled, is United required to provide me with a hotel?"*
 3.  **User:** *"My flight was delayed 3 hours. Do I get a meal voucher?"*
 
+
+### Check Run Notebook for actual execution path.
